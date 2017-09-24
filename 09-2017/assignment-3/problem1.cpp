@@ -6,7 +6,6 @@
 
 #include <iostream>
 using namespace std;
-
 /*
 * createInput takes a string, prompt as a paramter
 * It then uses the parameter to create output a message that explains what the user is then going to input.
@@ -84,11 +83,13 @@ void menu(void){
 			story3();
 			menu(); //once that story is over, it returns to the main menu.
 		}
-		else if(choice != "q"){
+		else if(choice == "q"){
+			cout << "good bye." << endl;
+		}
+		else{
 			cout << "Valid choice not selected." << endl;
 			menu(); //once that story is over, it returns to the main menu.
 		}
-	cout << "good bye"; //this point is only reached when q is chosen.
 }
 
 /*
