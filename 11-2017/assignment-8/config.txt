@@ -1,0 +1,3 @@
+humanChar:X
+AIChar:O
+EmptyChar:-
