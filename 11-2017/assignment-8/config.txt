@@ -1,3 +1,4 @@
 humanChar:X
 AIChar:O
 EmptyChar:-
+showScores:0

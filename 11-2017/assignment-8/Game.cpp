@@ -47,7 +47,7 @@ Game::Game(){
 	brd[0] = bd;
 	ifstream f("config.txt");
 	string line;
-
+	showScores = false;
 	if(f.is_open()){
 		for(int i=0; getline(f, line); i++){
 			int sz = split(line,':',config[i],2);
@@ -58,6 +58,21 @@ Game::Game(){
 			}
 			else if(config[j][0] == "humanChar"){
 				brd[0].setHuman(config[j][1][0]);
+			}
+			else if(config[j][0] == "showScores"){
+				int a;
+				try{
+					a = stoi(config[j][1]);
+					if(a != 1) a = 0;
+					showScores = false;
+				}
+				catch(exception e){
+					a = 0;
+					showScores = false;
+				}
+				if(a == 1){
+					showScores = true;
+				}
 			}
 			if(config[j][0] == "AIChar"){
 				brd[0].setAI(config[j][1][0]);
@@ -84,27 +99,30 @@ minimax takes a board as a paramater, and returns the best move, 1-9.
 It makes an array of all the possible moves that the AI would take in the imminent turn, then tries all of them recursively,
 going as deep as a whole game would last, to determine which moves are good based on the best score of the end of 
 the tree search. So say 4, 6, and 9 all have the same score of zero, it will pick 9 because that was the last move
-it tried.
+it tried. It will echo the scores of each move if you enable it in the config.txt with the showScores property.
 */
 int Game::minimax(Board b){
 	int bestScore = 100;
 	int bestMove;
 	int moves[9];
 	int s = b.getAvailableMoves(moves);
-	Board test;
 	int i;
-	cout << "Possible Moves:" << endl;
+	if(showScores)
+		cout << "Possible Moves:" << endl;
 	for(i=0;i<s;i++){
-		test = b;
-		cout << moves[i];
-		test.move(false,moves[i]);
-		int score = max(test);
-		cout << " score: [" << score << "]";
+		brd[1] = b;
+		if(showScores)
+			cout << moves[i];
+		brd[1].move(false,moves[i]);
+		int score = max(brd[1]);
+		if(showScores)
+			cout << " score: [" << score << "]";
 		if(score <= bestScore){
 			bestScore = score;
 			bestMove = moves[i];
 		}
-		cout << endl;
+		if(showScores)
+			cout << endl;
 	}
 	return bestMove;
 }
@@ -121,9 +139,9 @@ int Game::max(Board b){
 	int bestScore = -1000;
 	int s = b.getAvailableMoves(moves);
 	for(int i=0;i<s;i++){
-		Board c = b;
-		c.move(true,moves[i]);
-		int score = min(c);
+		brd[1] = b;
+		brd[1].move(true,moves[i]);
+		int score = min(brd[1]);
 		if(score >= bestScore){
 			bestScore = score;
 		}
@@ -142,12 +160,11 @@ int Game::min(Board b){
 	int bestScore = 1000;
 	int s = b.getAvailableMoves(moves);
 	for(int i=0;i<s;i++){
-		Board c = b;
-		c.move(false,moves[i]);
-		int score = max(c);
+		brd[1] = b;
+		brd[1].move(false,moves[i]);
+		int score = max(brd[1]);
 		if(score <= bestScore){
 			bestScore = score;
-
 		}
 	}
 	return bestScore;
@@ -194,20 +211,21 @@ if the move fails, it returns to the label to get a new input
 */
 void Game::promptPlayerToMove(){
 	int a[9];
-	if(brd[0].getAvailableMoves(a) == 9) brd[0].printBoard();
+	if(brd[0].getAvailableMoves(a) == 9)
+		brd[0].printBoard();
 	label:
-	string i;
-	cout << "Please enter a number 1-9 to pick a spot: ";
-	cin >> i;
-	int m;
-	try{
-		m = stoi(i);
-	}
-	catch(exception e){
-		goto label;
-	}
-	bool s = brd[0].move(true, m);
-	if(!s) goto label;
+		string i;
+		cout << "Please enter a number 1-9 to pick a spot: ";
+		cin >> i;
+		int m;
+		try{
+			m = stoi(i);
+		}
+		catch(exception e){
+			goto label;
+		}
+		bool s = brd[0].move(true, m);
+		if(!s) goto label;
 }
 int Game::score(Board b){
 	if(b.playerWon(b.human)) return -10;

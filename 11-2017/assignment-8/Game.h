@@ -36,6 +36,7 @@ class Game{
 		char aiChar;
 		char humanChar;
 		char emptyChar;
+		bool showScores;
 		Board brd[]; // this array *could* save every state of the game as it goes on, BUT i think that's silly. For this project the array isn't really needed. I would have made a class of "Move" that board uses arrays of but I just figured that class wouldn't have enough methods.
 };
 #endif
