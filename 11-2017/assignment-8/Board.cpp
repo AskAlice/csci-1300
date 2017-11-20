@@ -163,6 +163,15 @@ void Board::setEmpty(char c){
 	empty = c;
 	clearBoard();
 }
+char Board::getHuman(){
+	return human;
+}
+char Board::getAI(){
+	return AI;
+}
+char Board::getEmpty(){
+	return empty;
+}
 bool Board::move(bool c, int p){
 	if(p > 9) return false;
 	if(p < 1) return false;
@@ -197,7 +206,7 @@ bool Board::move(bool c, int p){
 	return true;
 }
 int Board::score(){
-	if(playerWon(human)) return -10;
-	else if(playerWon(AI)) return 10;
+	if(playerWon(human)) return 10;
+	else if(playerWon(AI)) return -10;
 	return 0;
 }

@@ -79,12 +79,81 @@ bool Game::hasWinner(){
 	else return false;
 }
 
+
+//unused minimax function.. doesn't even work, but I tried :(
+int Game::minimax(Board b){
+	int bestScore = 100;
+	int bestMove;
+	int moves[9];
+	int s = b.getAvailableMoves(moves);
+	Board test;
+	int i;
+	cout << "Possible Moves:" << endl;
+	for(i=0;i<s;i++){
+		test = b;
+		cout << moves[i];
+		test.move(false,moves[i]);
+		int score = max(test);
+		cout << " score: [" << score << "]";
+		if(score <= bestScore){
+			bestScore = score;
+			bestMove = moves[i];
+		}
+		cout << endl;
+	}
+	return bestMove;
+}
+int Game::max(Board b){
+	if(b.gameOver()) return b.score();
+	int moves[9];
+	int bestScore = -1000;
+	int s = b.getAvailableMoves(moves);
+	for(int i=0;i<s;i++){
+		Board c = b;
+		c.move(true,moves[i]);
+		int score = min(c);
+		if(score >= bestScore){
+			bestScore = score;
+		}
+	}
+	return bestScore;
+}
+int Game::min(Board b){
+	if(b.gameOver()) return b.score();
+	int moves[9];
+	int bestScore = 1000;
+	int s = b.getAvailableMoves(moves);
+	for(int i=0;i<s;i++){
+		Board c = b;
+		c.move(false,moves[i]);
+		int score = max(c);
+		if(score <= bestScore){
+			bestScore = score;
+
+		}
+	}
+	return bestScore;
+}
+
 /*
 this checks for available moves, if there is a move, it makes a random number,
 that is within the size of the array of available moves, as to pick a random index.
 it makes that move. If the move fails, it will just say that there was an error. It doesn't ever fail though.
 */
 int Game::aiMove(){
+	int a[9];
+	int m = brd[0].getAvailableMoves(a);
+	if(m < 0)
+	{
+		brd[0].printBoard();
+		return -1;
+	}
+	int bestMove = minimax(brd[0]);
+	
+	brd[0].move(false,bestMove);
+	brd[0].printBoard();
+	
+	/*
 	int a[9];
 	int r;
 	srand(time(0));
@@ -97,7 +166,8 @@ int Game::aiMove(){
 		cout << "error";
 	}
 	brd[0].printBoard();
-	return r;
+	*/
+	return 1;
 }
 
 
@@ -127,39 +197,4 @@ int Game::score(Board b){
 	if(b.playerWon(b.human)) return -10;
 	else if(b.playerWon(b.AI)) return 10;
 	return 0;
-}
-
-//unused minimax function.. doesn't even work, but I tried :(
-
-int Game::max(Board b){
-	int bestScore = 100;
-	int bestMove;
-	int move = -1;
-	int score = -2;
-	int moves[9];
-	int i;
-	bool turn = b.turn;
-	if(!b.gameOver()){
-		int s = b.getAvailableMoves(moves);
-		for(i=0;i<s;i++){
-			Board c = b;
-			if(!turn) cout << " " << moves[i];
-			else cout << " ( "<< moves[i] << ") ";
-			c.move(turn, moves[i]);
-			int o = c.score();
-			cout << "score" << o;
-			int sc = -max(c);
-			if(sc > score){
-				score = sc;
-				move = moves[i];
-				break;
-			}
-		}
-	}else{
-		score = 10;
-	}
-	if(move == -1) return -1;
-	cout << endl<< score <<endl;
-	if(score == 0) b.move(turn, moves[i]);
-	return score;
 }

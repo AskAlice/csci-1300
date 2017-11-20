@@ -37,6 +37,7 @@ class Board{
 		char getAI();
 		char getEmpty();
 		void output(string);
+
 	private:
 		char board[3][3];
 };

@@ -21,7 +21,9 @@ class Game{
 		bool hasWinner();
 		int aiMove();
 		void promptPlayerToMove();
+		int minimax(Board);
 		int max(Board);
+		int min(Board);
 		int score(Board); //// win = 10, lose = -10, tie = 0
 		void setTurn(bool);
 		void swapTurn();
