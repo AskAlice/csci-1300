@@ -79,8 +79,13 @@ bool Game::hasWinner(){
 	else return false;
 }
 
-
-//unused minimax function.. doesn't even work, but I tried :(
+/*
+minimax takes a board as a paramater, and returns the best move, 1-9.
+It makes an array of all the possible moves that the AI would take in the imminent turn, then tries all of them recursively,
+going as deep as a whole game would last, to determine which moves are good based on the best score of the end of 
+the tree search. So say 4, 6, and 9 all have the same score of zero, it will pick 9 because that was the last move
+it tried.
+*/
 int Game::minimax(Board b){
 	int bestScore = 100;
 	int bestMove;
@@ -103,6 +108,13 @@ int Game::minimax(Board b){
 	}
 	return bestMove;
 }
+
+/*
+this function is called by minimax and min, it emulates a user's move in the next turn
+essentially swapping back and forth between ai and user via max() and min() until the end of the game is reached.
+Each move is scored based on whether there's a winner (and whom that is) or not. Lower score is better for the AI,
+higher score is better for human.
+*/
 int Game::max(Board b){
 	if(b.gameOver()) return b.score();
 	int moves[9];
@@ -118,6 +130,12 @@ int Game::max(Board b){
 	}
 	return bestScore;
 }
+/*
+this function is called by max, it emulates the AI's move in the next turn
+essentially swapping back and forth between ai and user via max() and min() until the end of the game is reached.
+Each move is scored based on whether there's a winner (and whom that is) or not. Lower score is better for the AI,
+higher score is better for human.
+*/
 int Game::min(Board b){
 	if(b.gameOver()) return b.score();
 	int moves[9];
@@ -136,10 +154,8 @@ int Game::min(Board b){
 }
 
 /*
-this checks for available moves, if there is a move, it makes a random number,
-that is within the size of the array of available moves, as to pick a random index.
-it makes that move. If the move fails, it will just say that there was an error. It doesn't ever fail though.
-*/
+this checks available moves. If there are none, it prints the board and returns -1. otherwise it will use the
+minimax funciton to calculate the best move then print it. In comments are an alternate AI that uses rand() */
 int Game::aiMove(){
 	int a[9];
 	int m = brd[0].getAvailableMoves(a);
