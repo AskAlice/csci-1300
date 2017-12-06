@@ -55,7 +55,7 @@ def calculate_average_rating(d):
     return averages
 
 def lookup_average_rating(i,b,r):
-    return "(%s) %s by %s" % (round(r[i],2),b[i][0],b[i][1])
+    return "(%s) %s by %s" % (format(round(r[i],2),".2f"),b[i][0],b[i][1])
 #PART_2 follow here
 
 
@@ -118,10 +118,9 @@ class Recommender:
             self.averages.append((float(sum(b))/float(len(b))))
         return None
 
-    def lookup_average_rating(self, book_index):
-        """
-        """
-        return #average_rating_string
+
+    def lookup_average_rating(self,i):
+        return "(%s) %s by %s" % (format(round(self.averages[i],2), '.2f'),self.books[i][0],self.books[i][1])
 
     def calc_similarity(self, user1, user2):
         """
@@ -161,7 +160,7 @@ def test():
     print r.calc_similarity('Leah', 'clipper')       # 0
     print r.calc_similarity('Apollo', 'James')       # -65
 
-
+"""
     #### lookup_average_rating function
     print r.lookup_average_rating(0)            # (3.83) The Hitchhiker's Guide To The Galaxy by Douglas Adams
     print r.lookup_average_rating(7)            # (0.43) The Sisterhood of the Travelling Pants by Ann Brashares
@@ -169,7 +168,7 @@ def test():
     print r.lookup_average_rating(30)           # (1.77) To Kill a Mockingbird by Harper Lee
     print r.lookup_average_rating(54)       # (1.56) The Chrysalids by John Wyndham
     print r.lookup_average_rating(10)       #(0.90) The Princess Diaries by Meg Cabot-> it should be (0.90), NOT (0.9)   
-
+"""
     #### get_most_similar_user
     print r.get_most_similar_user("Leah")       # hidan
     print r.get_most_similar_user("Rudy_Ann")   # ROFLOL
