@@ -123,19 +123,30 @@ class Recommender:
         return "(%s) %s by %s" % (format(round(self.averages[i],2), '.2f'),self.books[i][0],self.books[i][1])
 
     def calc_similarity(self, user1, user2):
-        """
-        """
-        return #similarity_measure
+        sum = 0.0;
+        for i,r in enumerate(self.users[user1]):
+                sum += r * self.users[user2][i]
+        return sum
 
     def get_most_similar_user(self, current_user_id):
-        """
-        """
-        return #best_user_match_id
+        best = 0;
+        bestu = 0;
+        for k,r in self.users.items():
+            if k != current_user_id:
+                sim = self.calc_similarity(current_user_id, k)
+                if sim > best:
+                    best = sim
+                    bestu = k
+        return bestu
 
     def recommend_books(self, current_user_id):
-        """
-        """
-        return #recommendations_list
+        rec = []
+        u = self.get_most_similar_user(current_user_id)
+        for i,b in enumerate(self.users[u]):
+            if self.users[current_user_id][i]:
+                s = self.lookup_average_rating(i)
+                rec.append(s)
+        return rec
 
 def test():
     book_list = read_books("book.txt")
@@ -153,14 +164,14 @@ def test():
     r = Recommender("book.txt", "ratings.txt")
     r.calculate_average_rating()
     print(r.averages)
-    """
+    
     #### calc_similarity function:
     print r.calc_similarity('Cust8', 'Shannon')      # 369
     print r.calc_similarity('Megan', 'Strongbad')    # 95
     print r.calc_similarity('Leah', 'clipper')       # 0
     print r.calc_similarity('Apollo', 'James')       # -65
 
-"""
+
     #### lookup_average_rating function
     print r.lookup_average_rating(0)            # (3.83) The Hitchhiker's Guide To The Galaxy by Douglas Adams
     print r.lookup_average_rating(7)            # (0.43) The Sisterhood of the Travelling Pants by Ann Brashares
@@ -168,7 +179,7 @@ def test():
     print r.lookup_average_rating(30)           # (1.77) To Kill a Mockingbird by Harper Lee
     print r.lookup_average_rating(54)       # (1.56) The Chrysalids by John Wyndham
     print r.lookup_average_rating(10)       #(0.90) The Princess Diaries by Meg Cabot-> it should be (0.90), NOT (0.9)   
-"""
+
     #### get_most_similar_user
     print r.get_most_similar_user("Leah")       # hidan
     print r.get_most_similar_user("Rudy_Ann")   # ROFLOL
@@ -203,7 +214,7 @@ def test():
     #  '(3.04) The Lord of the Rings by J R R Tolkien',
     #  '(2.85) The Hobbit by J R R Tolkien',
     #  '(2.83) The War Of The Worlds by H G Wells']
-    """
+    
 
 if __name__ == "__main__":
     test()
